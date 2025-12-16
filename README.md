@@ -101,3 +101,75 @@ roslaunch franka_gazebo panda.launch rviz:=true controller:=cartesian_impedance_
 ```
 and you should be able to drag the arm in the rviz.
 
+## Tips for Installing Real Time Kernel
+
+### General steps
+
+Basically follow this link https://www.acontis.com/en/building-a-real-time-linux-kernel-in-ubuntu-preemptrt.html (This one is better than other instructions which I have tried before)
+
+Website for RT kernel patches: https://www.kernel.org/pub/linux/kernel/projects/rt/
+```bash
+mkdir ~/kernel
+cd ~/kernel
+```
+For Ubuntu20.04 with the original kernel 5.15.0-139-generic, execute
+```bash
+wget https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-5.15.195.tar.gz
+wget https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/5.15/patch-5.15.195-rt90.patch.xz
+```
+Still you have to follow that link, but here are the commands I used during installation
+```bash
+tar -xzf linux-5.15.195.tar.gz
+xz -d patch-5.15.195-rt90.patch.xz
+cd linux-5.15.195/
+patch -p1 <../patch-5.15.195-rt90.patch
+cp /boot/config-5.15.0-139-generic .config
+```
+
+### Trouble shooting
+
+1. When encountered with following error: 
+```bash
+././include/linux/compiler_types.h:334:38: error: call to ‘__compiletime_assert_933’ declared with attribute error: clamp() low limit slotsize greater than high limit total_avail/scale_factor
+```
+Disable NFS server support. This can be done by executing
+```bash
+make menuconfig
+```
+Then in the GUI, find -> File systems -> Network File Systems -> NFS server support, select this and press space until the check box in front is empty(<>). Then save and exit.
+
+
+2. Execute following two commands in after running "make menuconfig"
+```bash
+scripts/config --disable SYSTEM_TRUSTED_KEYS
+scripts/config --disable SYSTEM_REVOCATION_KEYS
+```
+
+3. Before sudo make, 
+```bash
+sudo apt install dwarves
+```
+
+4. If have not install zstd,  then
+```bash
+sudo apt update
+sudo apt install zstd
+```
+
+5. When compiling and executing sudo make, it might take around 3 hours. Drink cups of coffee and Wait.
+
+6. After the compilation is finished, when executing "sudo make install", maybe the boot space is full. Then safely remove the old kernel before install again.
+
+7. After everything is compiled and installed, reboot. If you encountered an error like "out of memory" in the grub interface and are not able to enter the system, here's the solution:
+
+try to enter the Ubuntu system using the recovery mode, or using live Ubuntu with USB booting. Then do:
+```bash
+mount -o remount,rw/
+sudo nano /etc/initramfs-tools/initramfs.conf
+```
+find the line ```MODULES=most``` and change it to ```MODULES=dep```, and press Ctrl+O, Enter and Ctrl+X. Then
+```bash
+sudo update-initramfs -c -k 5.15.195-rt90
+sudo update-grub
+```
+Reboot again and it should be fine now.
