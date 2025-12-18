@@ -101,6 +101,10 @@ roslaunch franka_gazebo panda.launch rviz:=true controller:=cartesian_impedance_
 ```
 and you should be able to drag the arm in the rviz.
 
+
+roslaunch franka_example_controllers joint_impedance_example_controller.launch load_gripper:=true robot:=panda
+
+
 ## Tips for Installing Real Time Kernel
 
 ### General steps
