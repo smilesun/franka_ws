@@ -101,6 +101,8 @@ roslaunch franka_gazebo panda.launch rviz:=true controller:=cartesian_impedance_
 ```
 and you should be able to drag the arm in the rviz.
 
+roslaunch franka_gazebo panda.launch x:=-0.5     world:=$(rospack find franka_gazebo)/world/stone.sdf     controller:=joint_position_example_controller     rviz:=true
+
 
 roslaunch franka_example_controllers joint_impedance_example_controller.launch load_gripper:=true robot:=panda
 

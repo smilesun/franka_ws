@@ -1,1 +1,0 @@
-/usr/bin/c++ -fPIC -std=gnu++17 -L/opt/ros/noetic/lib -shared -Wl,-soname,libgtest.so -o ../lib/libgtest.so CMakeFiles/gtest.dir/src/gtest-all.cc.o  -pthread 

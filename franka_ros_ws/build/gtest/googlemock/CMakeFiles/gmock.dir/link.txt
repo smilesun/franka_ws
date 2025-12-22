@@ -1,1 +1,0 @@
-/usr/bin/c++ -fPIC -std=gnu++17 -L/opt/ros/noetic/lib -shared -Wl,-soname,libgmock.so -o ../lib/libgmock.so CMakeFiles/gmock.dir/src/gmock-all.cc.o  -Wl,-rpath,/home/kris/workspaces/franka_ws/franka_ros_ws/build/gtest/lib ../lib/libgtest.so -pthread 

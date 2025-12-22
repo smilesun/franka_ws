@@ -1,0 +1,7 @@
+build/
+devel/
+logs/
+
+franka_ros_ws/build/
+franka_ros_ws/devel/
+franka_ros_ws/logs/

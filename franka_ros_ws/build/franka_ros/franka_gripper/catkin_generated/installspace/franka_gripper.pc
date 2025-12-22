@@ -1,8 +1,0 @@
-prefix=/home/kris/workspaces/franka_ws/franka_ros_ws/install
-
-Name: franka_gripper
-Description: Description of franka_gripper
-Version: 0.10.1
-Cflags: -I${prefix}/include -I/usr/include
-Libs: -L${prefix}/lib -lfranka_gripper /usr/lib/libfranka.so.0.18.2
-Requires: roscpp message_runtime control_msgs actionlib sensor_msgs xmlrpcpp actionlib_msgs
