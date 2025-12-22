@@ -1,3 +1,6 @@
 [submodule "franka_ros_ws/src/franka_ros"]
 	path = franka_ros_ws/src/franka_ros
 	url = git@github.com:prominentjohnson/franka_ros.git
+[submodule "libfranka"]
+	path = libfranka
+	url = git@github.com:frankarobotics/libfranka.git
