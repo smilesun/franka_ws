@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 ###############################################################################
 # Install libfranka dependencies (Ubuntu 20.04)
 ###############################################################################
 sudo apt-get update
-sudo apt-get install -y build-essential cmake git libpoco-dev libeigen3-dev libfmt-dev
+sudo apt-get install -y build-essential cmake git libpoco-dev libeigen3-dev libfmt-dev # build toolchain, build system, VCS, Poco libs, Eigen headers, and fmt formatting lib
 
 ###############################################################################
 # Install libfranka package
@@ -13,19 +14,34 @@ sudo apt-get install -y build-essential cmake git libpoco-dev libeigen3-dev libf
 cd "${HOME}/Downloads"
 wget https://github.com/frankarobotics/libfranka/releases/download/0.18.2/libfranka_0.18.2_focal_amd64.deb
 sudo dpkg -i libfranka_0.18.2_focal_amd64.deb
-
+# .deb is the prebuilt libfranka package for Ubuntu 20.04.  It typically contains:
+#  - Shared library files (e.g., libfranka.so)
+#  - C++ headers for the libfranka API
+#  - CMake config files (so projects can find_package(libfranka))
+#  - License and docs
+#
+#  To see the exact contents on your machine (after download), run:
+#
+#  dpkg -c libfranka_0.18.2_focal_amd64.deb
+#
+#  To see metadata:
+#
+#  dpkg -I libfranka_0.18.2_focal_amd64.deb
+#
+#
 ###############################################################################
 # Build franka_ros (catkin workspace)
 ###############################################################################
-mkdir -p "${HOME}/workspaces/franka_ws/franka_ros_ws/src"
-cd "${HOME}/workspaces/franka_ws/franka_ros_ws/src"
-git clone git@github.com:prominentjohnson/franka_ros.git
+mkdir -p "${SCRIPT_DIR}/franka_ros_ws/src"
+cd "${SCRIPT_DIR}/franka_ros_ws/src"
 
-sudo apt install -y ros-noetic-pinocchio
-sudo apt install -y ros-noetic-combined-robot-hw
-sudo apt install -y ros-noetic-boost-sml
+git clone git@github.com:smilesun/franka_ros.git
 
-cd "${HOME}/workspaces/franka_ws/franka_ros_ws"
+sudo apt install -y ros-noetic-pinocchio # Pinocchio rigid-body dynamics for kinematics/dynamics
+sudo apt install -y ros-noetic-combined-robot-hw # ROS combined robot hardware abstraction
+sudo apt install -y ros-noetic-boost-sml # Boost.SML for state-machine logic
+
+cd "${SCRIPT_DIR}/franka_ros_ws"
 catkin_make
 
 ###############################################################################
