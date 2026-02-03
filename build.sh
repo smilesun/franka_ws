@@ -46,5 +46,9 @@ sudo apt install -y ros-noetic-pinocchio # Pinocchio rigid-body dynamics for kin
 sudo apt install -y ros-noetic-combined-robot-hw # ROS combined robot hardware abstraction
 sudo apt install -y ros-noetic-boost-sml # Boost.SML for state-machine logic
 
+sudo apt install -y ros-noetic-catkin
+# sudo apt install -y catkin  # dependency problem
+
 cd "${SCRIPT_DIR}/franka_ros_ws"
-catkin_make
+source /opt/ros/noetic/setup.bash
+catkin_make # with underscore
