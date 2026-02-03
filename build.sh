@@ -29,6 +29,11 @@ sudo dpkg -i libfranka_0.18.2_focal_amd64.deb
 #  dpkg -I libfranka_0.18.2_focal_amd64.deb
 #
 #
+# - libfranka is the low‑level C++ library that talks directly to Franka robots (FCI). It provides the core API for real robot control.
+# - franka_ros is a ROS 1 wrapper that depends on libfranka. It exposes the robot into ROS (topics, services, controllers).
+# - ros-noetic-desktop-full is the full ROS 1 Noetic distribution. It gives you ROS itself (tools, messages, Gazebo, RViz). 
+# dependency: libfranka → franka_ros → ROS.
+
 ###############################################################################
 # Build franka_ros (catkin workspace)
 ###############################################################################
