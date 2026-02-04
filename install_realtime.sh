@@ -8,7 +8,8 @@ mkdir -p "${HOME}/kernel"
 cd "${HOME}/kernel"
 
 wget https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-5.15.195.tar.gz
-wget https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/5.15/patch-5.15.195-rt90.patch.xz
+# wget https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/5.15/patch-5.15.195-rt90.patch.xz
+wget https://www.kernel.org/pub/linux/kernel/projects/rt/5.15/older/patch-5.15.195-rt90.patch.xz
 
 tar -xzf linux-5.15.195.tar.gz
 xz -d patch-5.15.195-rt90.patch.xz
