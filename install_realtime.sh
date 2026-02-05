@@ -15,6 +15,15 @@ BASE_CONFIG="/boot/config-$(uname -r)"
 RT_SUFFIX="${RT_PATCH#patch-}"
 RT_SUFFIX="${RT_SUFFIX#${KERNEL_VERSION}-}"
 
+if [[ "${1:-}" == "--clean" ]]; then
+  echo "Cleaning kernel workspace in ${HOME}/kernel"
+  rm -rf "${HOME}/kernel/${KERNEL_DIR}"
+  rm -f "${HOME}/kernel/${RT_PATCH}.patch" "${HOME}/kernel/${RT_PATCH}.patch.xz" "${HOME}/kernel/${KERNEL_TAR}"
+  rm -f "${HOME}/kernel/.rt_patch_applied_${RT_PATCH}"
+  echo "Clean complete."
+  exit 0
+fi
+
 if [[ "${1:-}" == "--check" ]]; then
   pass=true
   echo "Post-reboot RT kernel check"
@@ -60,14 +69,36 @@ if [[ "${1:-}" == "--check" ]]; then
   exit 0
 fi
 
-wget "https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/${KERNEL_TAR}"
-wget "https://www.kernel.org/pub/linux/kernel/projects/rt/5.15/older/${RT_PATCH}.patch.xz"
+if [[ -f "${KERNEL_TAR}" ]]; then
+  echo "Using existing ${KERNEL_TAR}"
+else
+  wget "https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/${KERNEL_TAR}"
+fi
 
-tar -xzf "${KERNEL_TAR}"
-xz -d "${RT_PATCH}.patch.xz"
+if [[ -f "${RT_PATCH}.patch.xz" || -f "${RT_PATCH}.patch" ]]; then
+  echo "Using existing ${RT_PATCH}.patch.xz or ${RT_PATCH}.patch"
+else
+  wget "https://www.kernel.org/pub/linux/kernel/projects/rt/5.15/older/${RT_PATCH}.patch.xz"
+fi
+
+if [[ -d "${KERNEL_DIR}" ]]; then
+  echo "Using existing ${KERNEL_DIR}"
+else
+  tar -xzf "${KERNEL_TAR}"
+fi
+
+if [[ -f "${RT_PATCH}.patch.xz" && ! -f "${RT_PATCH}.patch" ]]; then
+  xz -d "${RT_PATCH}.patch.xz"
+fi
 
 cd "${KERNEL_DIR}/"
-patch -p1 <"../${RT_PATCH}.patch"
+patch_marker=".rt_patch_applied_${RT_PATCH}"
+if [[ -f "${patch_marker}" ]]; then
+  echo "RT patch already applied (${patch_marker} found)."
+else
+  patch -p1 <"../${RT_PATCH}.patch"
+  touch "${patch_marker}"
+fi
 if [[ -f "${BASE_CONFIG}" ]]; then
   cp "${BASE_CONFIG}" .config
 else
