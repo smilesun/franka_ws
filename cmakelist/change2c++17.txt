@@ -1,0 +1,1 @@
+target_compile_features(franka_control_services PUBLIC cxx_std_17)
