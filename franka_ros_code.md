@@ -22,5 +22,23 @@
 - `omega_max = 0.2`, `kp = 3.0`.
 - Stability thresholds: `e_tol = 4e-2 rad`, `dq_tol = 3e-2 rad/s`, `stable_duration = 0.5 s`.
 
+## Critical line: user presses `r`
+This is the exact line that reacts to the keypress, and what it triggers:
+
+```cpp
+      if (c == 'r') {       // press r to release
+        release_requested_.store(true, std::memory_order_relaxed);
+        triggerRunBarrier();
+        ROS_INFO("Release key pressed!");
+      }
+```
+
+What happens:
+- `release_requested_` is set, which later makes the gripper state machine transition to `RELEASE` in `update()`.
+- `triggerRunBarrier()` writes a byte to `/tmp/run_barrier` (if it exists), which can be used as a synchronization signal.
+- A ROS log message is emitted.
+
+Source: `franka_ros_ws/src/franka_ros/franka_example_controllers/src/joint_velocity_example_controller.cpp`.
+
 ## Differences vs original
 - There is an alternate file `joint_velocity_example_controller_original.cpp` in the same folder, but the build references `joint_velocity_example_controller.cpp`.
