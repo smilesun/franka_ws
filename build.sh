@@ -10,10 +10,11 @@ sudo apt-get install -y build-essential cmake git libpoco-dev libeigen3-dev libf
 
 ###############################################################################
 # Install libfranka package
+# DON't use the latest libfranka, compile yourself v0.9!
 ###############################################################################
-cd "${HOME}/Downloads"
-wget https://github.com/frankarobotics/libfranka/releases/download/0.18.2/libfranka_0.18.2_focal_amd64.deb
-sudo dpkg -i libfranka_0.18.2_focal_amd64.deb
+# cd "${HOME}/Downloads"
+# wget https://github.com/frankarobotics/libfranka/releases/download/0.18.2/libfranka_0.18.2_focal_amd64.deb
+# sudo dpkg -i libfranka_0.18.2_focal_amd64.deb
 # .deb is the prebuilt libfranka package for Ubuntu 20.04.  It typically contains:
 #  - Shared library files (e.g., libfranka.so)
 #  - C++ headers for the libfranka API

@@ -17,7 +17,7 @@ For std::atomic<bool>, the value is tiny so tearing is unlikely even without ato
 
 So here, the “synchronization guarantee” is about visibility/order of other memory, not about the flag itself. 
 If the flag is just a signal and there’s no dependent data, relaxed is fine. 
-If other data must be observed consistently when the flag is seen, you need release/acquire (or seq_cst).
+If other data must be observed consistently when the flag is seen, you need **release/acquire** (or **seq_cst**).
 
 
 # Here’s a concrete case where ordering is not preserved with memory_order_relaxed:                                                                                                                                
@@ -78,6 +78,41 @@ If other data must be observed consistently when the flag is seen, you need rele
     printf("%d\n", data); // guaranteed 42
   }
 
-  Release/acquire creates a happens-before relationship: if B sees the flag as true, it must also see all prior writes done by A.
+# Alternative: release/acquire
+  Release/acquire creates a **happens-before** relationship: if B sees the flag as true, it must also see all prior writes done by A.
+  Release/acquire are memory ordering modes for atomics that create a one‑way synchronization between threads.                                                                                                     
+  
+    Release (writer side)                             
+    
+      flag.store(true, std::memory_order_release);  
+      
+      
+ 
+compare with cst
+
+
+• - seq_cst (sequentially consistent) enforces a single global total order on all loads and stores, ensuring all threads observe operations in the exact same sequence.
+  - release/acquire provide a partial ordering, guaranteeing visibility of writes before a release and reads after an acquire, but without single global total order.
+  - seq_cst is stronger and easier to reason about but can be less performant.
+  - release/acquire are preferred for finer-grained synchronization where total order isn’t required, enabling better performance.
+
+• Here’s the practical comparison:
+
+  memory_order_release + memory_order_acquire
+
+  - Creates a one‑way synchronization between a specific writer and reader.
+  - Guarantees that writes before the release are visible after the acquire (only for threads that observe that value).
+  - Does not impose a single global order across all atomic operations.
+
+  memory_order_seq_cst
+
+  - Strongest ordering: all seq_cst atomics appear in a single total order consistent with program order.
+  - Easier to reason about when multiple threads and multiple atomics interact.
+  - Usually a bit slower than release/acquire.
+
+  Rule of thumb
+
+  - Use release/acquire for “publish data then signal” patterns (fast and sufficient).
+  - Use seq_cst when correctness depends on a global ordering across threads or multiple atomics.
 
 
