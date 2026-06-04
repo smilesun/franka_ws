@@ -2,6 +2,11 @@
 ### Franka Panda
 Switch on the robot and wait until the yellow light is continuous. Connect the Ethernet wire to your PC. Configure your Ethernet IP address to ```192.168.3.10``` and the netmask to ```255.255.255.0```. 
 Open google chrome browser and visit ```https://192.168.3.108/```. If usrname and password is required, enter usrname: franka, password: frankaRSI
+
+#### For first use, press the button on the last joint of the robot, in front of the center button (press once), the bigger one.
+#### Open setting, in weight cancellation mode, choose the right end effector 
+#### don't forget to source noetic, i.e. enter ros environment.
+
 After logging in, unlock the robot by clicking a button in the right middle of the UI. Keep the safety button in your hand. press it to lock the robot and the white light should be on. Spin it clockwise to unlock the safety button, the light should turn blue and the robot can be moved. On the top right, find a button to activate FCI so that it can be controlled by your code.
 Then you should be able to run your code. Open three terminals, one in libfranka/build/examples and two in franka_ros_ws.
 In libfranka, execute
