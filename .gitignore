@@ -5,3 +5,5 @@ logs/
 franka_ros_ws/build/
 franka_ros_ws/devel/
 franka_ros_ws/logs/
+# Nested independent git repo; tracked in its own history, not here.
+franka_ros_ws/src/franka_ros_table_calibration/
